@@ -626,8 +626,9 @@ class Candlestick(SeriesCommon):
         :param series: labels: date/time, open, high, low, close, volume (if using volume).
         """
         series = self._series_datetime_format(series) if not _from_tick else series
-        if series['time'] != self._last_bar['time']:
+        if series['time'] == self._last_bar['time']:
             self.candle_data.loc[self.candle_data.index[-1]] = self._last_bar
+        else:
             self.candle_data = pd.concat([self.candle_data, series.to_frame().T], ignore_index=True)
             self._chart.events.new_bar._emit(self)
         self._last_bar = series
